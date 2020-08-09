@@ -1,8 +1,8 @@
 class node:
     def __init__(self,val):
-        self.data=val
+        self.data=val  # value of the node
         self.p ,self.r ,self.l ,self.red = None,None,None,True
-
+        # self.p = parent node  / self.r = right child / self.l = left child / self.red = a boolean which shows that if our node is red or not
 class tree :
     def __init__(self):
         self.root=None
@@ -67,45 +67,48 @@ class tree :
                         return(x,'left')
 
     def insert(self,val,is_val=True) :
+        # boolean variable is_val , checks if the val is a node or it's a value which we want to insert to the tree
         if is_val:
-            x , th = self.find(val)
+            x , th = self.find(val)  # finds the parent of our new inserted node and the direction
             if th == 'root' :
                 self.root = node(val)
-                self.root.red = False
+                self.root.red = False  # root have to be black
                 return
         
-            elif th == 'left' :
-                a = node(val)
+            elif th == 'left' :  # we have to insert the new node as the left child of x
+                a = node(val)  # our new inserted node
                 x.l = a
                 a.p = x
                 if x.red :
-                    pp = x.p
+                    # here we have to red nodes as parent and child 
+                    pp = x.p  # grandparent of a = parent of x
 
-                    if pp.l ==x :
-                        if pp.r and pp.r.red :
+                    if pp.l ==x :  # x is the left child of its parent
+                        if pp.r and pp.r.red :  # it checks the right child of pp and the color of it         
                             pp.r.red , x.red = False , False
                             pp.red = True
-                            self.insert(pp,is_val=False)
+                            self.insert(pp,is_val=False) # here we use insert as a recursive function 
 
-                        elif (pp.r and (not pp.r.red)) or not pp.r :
+                        elif (pp.r and (not pp.r.red)) or not pp.r :  # right child of pp is black or there is no right child for pp
                             pp.red , x.red = True , False
                             self.rotate_right(x)
-                    else:
-                        if pp.l and pp.l.red :
+                    else:    # x is the right child of its parent     
+                        if pp.l and pp.l.red :   # it checks the left child of pp and the color of it 
                             pp.r.red , x.red =False , False
                             pp.red=True
-                            self.insert(pp,is_val=False)
-                        elif (pp.l and (not pp.l.red)) or not pp.l :
+                            self.insert(pp,is_val=False) # here we use insert as a recursive function
+                        elif (pp.l and (not pp.l.red)) or not pp.l :  # right child of pp is black or there is no right child for pp
                             self.rotate_right(a)
                             self.insert(x,is_val=False)
             
-            else:
-                a = node(val)
+            else:    # the new node which we are going to insert is the right child of x
+                a = node(val)  
                 x.r = a
                 a.p = x
                 if x.red :
+                    # here we have two red nodes as parent and child
                     pp = x.p
-
+                    # like the above elif
                     if pp.r ==x :
                         if pp.l and pp.l.red :
                             pp.l.red , x.red = False , False
@@ -125,14 +128,17 @@ class tree :
                             self.rotate_left(a)
                             self.insert(x,is_val=False)
 
-        else:
-            a = val
-            x = a.p
-            if not x :
-                a.red = False
+        else:  # the recursive part of insert() method
+            # it examines the node val to see if its parent is red or not
+            a = val  # the node we want to examine
+            x = a.p  # parent of node val
+            if not x : # the recursion finishing point
+                # we have reached the root of our tree
+                a.red = False # root have to be black
                 return
-            if x.r == a:
-                if x.red :
+            if x.r == a:  # val is the right child of its parent
+                if x.red : 
+                    # here we have two red nodes as parent and child
                     pp = x.p
 
                     if pp.r ==x :
@@ -181,7 +187,10 @@ class tree :
                             self.rotate_right(a)
                             self.insert(x,is_val=False)
     
-    def is_in_tree(self,val):
+    def is_in_tree(self,val): # searchs for a node in tree
+        ''' if the node is in tree : returns True
+            else : returns False 
+        '''
         x= self.root
         while x:
             if x.data==val :
@@ -193,7 +202,8 @@ class tree :
         return('NO')
     
     
-    def in_order(self,x=1234):
+    def in_order(self,x=1234): # prints in-order traversal of the tree
+        ''' prints space seperated in-order traversal of the tree in one line '''
         if x == 1234:
             x=self.root
         if not x:
@@ -204,7 +214,7 @@ class tree :
 
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # just for a test :)
     oh = tree()
 
     oh.insert(10)
