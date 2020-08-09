@@ -6,13 +6,15 @@ class node:
 class tree :
     def __init__(self):
         self.root=None
-
-    def rotate_right(self,a):  #             x
-                               #       a           y
-                               #   b       c
+                               #          (grandparent)                  (grandparent) 
+    def rotate_right(self,a):  #             x                               a
+                               #       a           y   ---->          b             x
+                               #   b       c                                    c       y
 
         x = a.p
-        # adjusting grand parent
+        if x==self.root :
+            self.root = a
+        # adjusting grandparent
         if x.p and  x.p.l == x :
             x.p.l = a
         elif x.p and x.p.r == x :
@@ -23,12 +25,14 @@ class tree :
         if a.r :
             a.r.p = x
         x.l , a.r = a.r , x
-
-    def rotate_left(self,a):  #            x
-                              #     y             a
-                              #              c         b       
+                              #          (grandparent)
+    def rotate_left(self,a):  #            x                                               a
+                              #     y             a            ----->              x              b
+                              #              c         b                     y           c  
         
         x = a.p
+        if x==self.root :
+            self.root = a
         # adjusting grand parent
         if x.p and  x.p.l == x :
             x.p.l = a
@@ -42,10 +46,13 @@ class tree :
         x.r , a.l = a.l , x
 
     def find(self,val): # finds where to insert the node with data = val
+        # returns the parent node of our new inserted node with data = val
+        # also returns the direction . for example if the new node is going to be inserted as the left child of its parent
+        # the find() method will return the parent node and the word 'left'
         x=self.root
         if not x:
             return (x,'root')
-
+        # it's searching in the tree
         else:
             while True:
                 if x.data < val :
@@ -80,7 +87,7 @@ class tree :
                             pp.red = True
                             self.insert(pp,is_val=False)
 
-                        elif pp.r and (not pp.r.red) :
+                        elif (pp.r and (not pp.r.red)) or not pp.r :
                             pp.red , x.red = True , False
                             self.rotate_right(x)
                     else:
@@ -88,7 +95,7 @@ class tree :
                             pp.r.red , x.red =False , False
                             pp.red=True
                             self.insert(pp,is_val=False)
-                        elif pp.l and (not pp.l.red) :
+                        elif (pp.l and (not pp.l.red)) or not pp.l :
                             self.rotate_right(a)
                             self.insert(x,is_val=False)
             
@@ -105,7 +112,7 @@ class tree :
                             pp.red = True
                             self.insert(pp,is_val=False)
 
-                        elif pp.l and (not pp.l.red) :
+                        elif (pp.l and (not pp.l.red)) or (not pp.l) :
                             pp.red , x.red = True , False
                             self.rotate_left(x)
                     else:
@@ -114,13 +121,16 @@ class tree :
                             pp.red=True
                             self.insert(pp,is_val=False)
 
-                        elif pp.r and not(pp.r.red) :
+                        elif (pp.r and not(pp.r.red)) or not pp.r :
                             self.rotate_left(a)
                             self.insert(x,is_val=False)
 
         else:
             a = val
             x = a.p
+            if not x :
+                a.red = False
+                return
             if x.r == a:
                 if x.red :
                     pp = x.p
@@ -170,6 +180,7 @@ class tree :
                         elif pp.l and (not pp.l.red) :
                             self.rotate_right(a)
                             self.insert(x,is_val=False)
+    
     def is_in_tree(self,val):
         x= self.root
         while x:
@@ -180,6 +191,16 @@ class tree :
             else:
                 x=x.l
         return('NO')
+    
+    
+    def in_order(self,x=1234):
+        if x == 1234:
+            x=self.root
+        if not x:
+            return
+        self.in_order(x.l)
+        print(x.data,end=' ')
+        self.in_order(x.r)
 
 
 
@@ -187,13 +208,31 @@ if __name__ == '__main__':
     oh = tree()
 
     oh.insert(10)
+    oh.in_order()
+    print()
     oh.insert(11)
+    oh.in_order()
+    print()
     oh.insert(12)
+    oh.in_order()
+    print()
     oh.insert(13)
+    oh.in_order()
+    print()
+    oh.insert(1)
+    oh.in_order()
+    print()
+    oh.insert(4)
+    oh.in_order()
+    print()
+    oh.insert(2)
+    oh.in_order()
+    print()
+    oh.insert(18)
+    oh.in_order()
+    print()
 
-    for i in range(10,15):
-        print(oh.is_in_tree(i))
-
+    oh.in_order(oh.root)
             
 
             
